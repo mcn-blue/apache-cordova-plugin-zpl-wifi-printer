@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="com.mcnblue.cordovaplugin" version="0.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+	<name>ZplWifiPrinter</name>
+	<js-module name="ZplWifiPrinter" src="www/ZplWifiPrinter.js">
+		<clobbers target="cordova.plugins.ZplWifiPrinter" />
+	</js-module>
+	<platform name="android">
+		<config-file parent="/*" target="res/xml/config.xml">
+			<feature name="ZplWifiPrinter">
+				<param name="android-package" value="com.mcnblue.cordovaplugin.ZplWifiPrinter" />
+			</feature>
+		</config-file>
+		<config-file parent="/*" target="AndroidManifest.xml"/>
+		<source-file src="src/android/ZplWifiPrinter.java" target-dir="src/com/mcnblue/cordovaplugin/ZplWifiPrinter" />
+		<source-file src="src/android/ZSDK_ANDROID_API.jar" target-dir="libs"/>
+	</platform>
+</plugin>

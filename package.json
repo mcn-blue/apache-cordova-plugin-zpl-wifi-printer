@@ -1,0 +1,17 @@
+{
+  "name": "com.mcnblue.cordovaplugin",
+  "version": "0.0.1",
+  "description": "apache cordova plugin para impresiones zpl via tcp/ip",
+  "cordova": {
+    "id": "com.mcnblue.cordovaplugin",
+    "platforms": [
+      "android"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "mcnblue",
+  "license": "ISC"
+}
