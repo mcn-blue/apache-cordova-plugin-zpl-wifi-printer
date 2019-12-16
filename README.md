@@ -1,6 +1,6 @@
 # Zpl printer plugin for Apache Cordova
 
-This plugin enables communication between Zebra Printers and Apache cordova Apps
+This plugin enables communication between Zebra Printers and Apache cordova Apps through ip address
 
 
 # Supported Platforms 
