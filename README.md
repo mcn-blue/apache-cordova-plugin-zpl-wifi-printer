@@ -11,10 +11,6 @@ This plugin enables communication between Zebra Printers and Apache cordova Apps
 
 	https://github.com/mcn-blue/apache-cordova-plugin-zpl-wifi-printer.git
 
-## Switch to another file
-
-All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
-
 ## Methods
 
 - find
