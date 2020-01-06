@@ -10,11 +10,11 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.zebra.android.discovery.*;
+//import com.zebra.android.discovery.*;
 import com.zebra.sdk.comm.Connection;
 import com.zebra.sdk.comm.ConnectionException;
 import com.zebra.sdk.comm.TcpConnection;
-import com.zebra.sdk.printer.ZebraPrinter;
+import com.zebra.sdk.printer.discovery.*;
 import com.zebra.sdk.printer.ZebraPrinterFactory;
 import com.zebra.sdk.printer.ZebraPrinterLanguageUnknownException;
 /**
@@ -23,51 +23,37 @@ import com.zebra.sdk.printer.ZebraPrinterLanguageUnknownException;
 public class ZplWifiPrinter extends CordovaPlugin {
     CallbackContext callbackContext;
     PluginResult result;
+    JSONObject params;
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         this.callbackContext = callbackContext;
-        boolean ret=true;
         try {
             switch (action) {
                 case "print":
-                    JSONObject config = args.getJSONObject(0);
-                    this.print(config, callbackContext);
-                    break;
+                    params = args.getJSONObject(0);
+                    this.print();
+                    return true;
                 case "find":
-                    //JSONObject config = args.getJSONObject(0);
-                    this.find(callbackContext);
-                    break;
+                    this.find();
+                    return true;
                 default:
-                    break;
-
+                    return false;
             }
         }catch(Exception e){
             callbackContext.error("action error: "+e.getMessage());
-            ret=false;
-        }
-        /*if (action.equals("coolMethod")) {
-            String message = args.getString(0);
-            this.coolMethod(message, callbackContext);
-            return true;
-        }*/
-        return ret;
-    }
-
-    private void coolMethod(String message, CallbackContext callbackContext) {
-        if (message != null && message.length() > 0) {
-            callbackContext.success(message);
-        } else {
-            callbackContext.error("Expected one non-empty string argument.");
+            return false;
         }
     }
 
-    public void print(JSONObject c,CallbackContext callbackContext) throws ConnectionException,JSONException {
+    public void print() throws ConnectionException,JSONException {
         // Instantiate connection for ZPL TCP port at given address
+        JSONObject c = params;
         System.out.println("print");
         Connection thePrinterConn;
         String ip = c.getString("ip");
         int port = c.has("port")?c.getInt("port"):TcpConnection.DEFAULT_ZPL_TCP_PORT;
         String zpl = c.getString("zpl");
+        System.out.println(ip+":"+port);
         thePrinterConn = new TcpConnection(ip,port);
         try {
             // Open the connection - physical connection is established here.
@@ -95,27 +81,24 @@ public class ZplWifiPrinter extends CordovaPlugin {
 
     DiscoveryHandler discoveryHandler = new DiscoveryHandler() {
         List<DiscoveredPrinter> printers = new ArrayList<DiscoveredPrinter>();
-
         public void foundPrinter(DiscoveredPrinter printer) {
+            System.out.println(printer);
             printers.add(printer);
         }
-
         public void discoveryFinished() {
             JSONArray arr = new JSONArray();
             JSONObject r = new JSONObject();
-
-
             try {
                 if(printers.size()==0){
                     r.put("message","no printers found");
                 }else{
                     r.put("message","printers were found");
+                    for (DiscoveredPrinter printer : printers) {
+                        System.out.println(printer);
+                        arr.put(printer);
+                    }
+                    r.put("printers",arr);
                 }
-                for (DiscoveredPrinter printer : printers) {
-                    System.out.println(printer);
-                    arr.put(printer);
-                }
-                r.put("printers",arr);
                 callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, r));
                 //callbackContext.success(arr);
             }catch (Exception e){
@@ -124,19 +107,18 @@ public class ZplWifiPrinter extends CordovaPlugin {
                 callbackContext.error(e.getMessage());
             }
         }
-
         public void discoveryError(String message) {
+            System.out.println(message);
             callbackContext.error(message);
         }
     };
 
-    public void find(final CallbackContext callbackContext) {
+    public void find() {
         try {
             System.out.println("findPrinter");
             NetworkDiscoverer.findPrinters(discoveryHandler);
-
         } catch (Exception e) {
-            // Handle communications error here.
+            e.printStackTrace();
             callbackContext.error(e.getMessage());
         }
     }
