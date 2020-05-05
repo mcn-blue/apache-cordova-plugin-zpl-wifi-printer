@@ -9,7 +9,7 @@ This plugin enables communication between Zebra Printers and Apache cordova Apps
 
 # Installing
 
-	https://github.com/mcn-blue/apache-cordova-plugin-zpl-wifi-printer.git
+	cordova plugin add https://github.com/mcn-blue/apache-cordova-plugin-zpl-wifi-printer.git
 
 ## Methods
 
